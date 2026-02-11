@@ -1527,15 +1527,22 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                         <!-- Client Connectivity Policy Hit Count Widget -->
                         <div class="widget widget-col-2" style="position: relative; z-index: 100;">
                             <div class="widget-header" style="justify-content: space-between;">
-                                <span class="widget-title">Client Connectivity Policy Hit Count</span>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span class="widget-title">Hit Count</span>
+                                    <span style="font-size: 14px; color: #667e9f;">of</span>
+                                    <select class="widget-select" id="policyTypeSelect" style="min-width: 180px;">
+                                        <option>Client Connectivity Policy</option>
+                                        <option>Internet Firewall Policy</option>
+                                        <option>WAN Firewall Policy</option>
+                                        <option>Private Access Policy</option>
+                                    </select>
+                                </div>
                                 <div style="display: flex; align-items: center; gap: 12px;">
                                     <div style="display: flex; align-items: center; gap: 8px;">
                                         <span style="font-size: 12px; color: #667e9f;">By</span>
                                         <select class="widget-select" style="min-width: 120px;">
                                             <option>Rule Name</option>
-                                            <option>Device Posture</option>
-                                            <option>Confidence Level</option>
-                                            <option>Operating System</option>
+                                            <option>Criteria</option>
                                         </select>
                                     </div>
                                 <div class="policy-toggle-group" id="policyToggleGroup">
@@ -1545,9 +1552,9 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                             </div>
                                     </div>
                             <div class="widget-content" id="policyHitContent" style="flex-direction: column; align-items: stretch; gap: 16px; padding: 16px;">
-                                <!-- Device Compliance - Windows -->
+                                <!-- Bar 1 -->
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                                    <span style="font-size: 13px; color: #273c5c;">Device Compliance - Windows</span>
+                                    <span class="policy-bar-label" style="font-size: 13px; color: #273c5c;">Device Compliance - Windows</span>
                                     <div style="display: flex; align-items: center; gap: 12px;">
                                         <div style="flex: 1; height: 8px; background: #e2e7ee; border-radius: 4px; overflow: hidden;">
                                             <div class="policy-hit-bar" style="width: 100%; height: 100%; background: #50B796; border-radius: 4px;"></div>
@@ -1556,9 +1563,9 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                                     </div>
                                 </div>
                                 
-                                <!-- Device Compliance - Mac -->
+                                <!-- Bar 2 -->
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                                    <span style="font-size: 13px; color: #273c5c;">Device Compliance - Mac</span>
+                                    <span class="policy-bar-label" style="font-size: 13px; color: #273c5c;">Device Compliance - Mac</span>
                                     <div style="display: flex; align-items: center; gap: 12px;">
                                         <div style="flex: 1; height: 8px; background: #e2e7ee; border-radius: 4px; overflow: hidden;">
                                             <div class="policy-hit-bar" style="width: 35%; height: 100%; background: #50B796; border-radius: 4px;"></div>
@@ -1567,9 +1574,9 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                                     </div>
                                 </div>
                                 
-                                <!-- Mobile Phones -->
+                                <!-- Bar 3 -->
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                                    <span style="font-size: 13px; color: #273c5c;">Mobile Phones</span>
+                                    <span class="policy-bar-label" style="font-size: 13px; color: #273c5c;">Mobile Phones</span>
                                     <div style="display: flex; align-items: center; gap: 12px;">
                                         <div style="flex: 1; height: 8px; background: #e2e7ee; border-radius: 4px; overflow: hidden;">
                                             <div class="policy-hit-bar" style="width: 35%; height: 100%; background: #50B796; border-radius: 4px;"></div>
@@ -1578,9 +1585,9 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                                     </div>
                                 </div>
                                 
-                                <!-- Windows Devices -->
+                                <!-- Bar 4 -->
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                                    <span style="font-size: 13px; color: #273c5c;">Windows Devices</span>
+                                    <span class="policy-bar-label" style="font-size: 13px; color: #273c5c;">Windows Devices</span>
                                     <div style="display: flex; align-items: center; gap: 12px;">
                                         <div style="flex: 1; height: 8px; background: #e2e7ee; border-radius: 4px; overflow: hidden;">
                                             <div class="policy-hit-bar" style="width: 35%; height: 100%; background: #50B796; border-radius: 4px;"></div>
@@ -1591,7 +1598,7 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                             </div>
                             <!-- View Policy Link -->
                             <div style="text-align: right; padding: 0 16px 16px 16px;">
-                                <a href="#" style="font-size: 13px; color: #1687f7; text-decoration: none;">View Client Connectivity Policy</a>
+                                <a href="#" id="viewPolicyLink" style="font-size: 13px; color: #1687f7; text-decoration: none;">View Client Connectivity Policy</a>
                                     </div>
                                 </div>
                                 
@@ -2192,6 +2199,57 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                             b.style.background = '';
                         });
                     });
+                });
+            }
+        })();
+        
+        // Policy Type Dropdown - Update View Link and Bar Labels
+        (function() {
+            const policyTypeSelect = document.getElementById('policyTypeSelect');
+            const viewPolicyLink = document.getElementById('viewPolicyLink');
+            const barLabels = document.querySelectorAll('#policyHitContent .policy-bar-label');
+            
+            const policyLabels = {
+                'Client Connectivity Policy': [
+                    'Device Compliance - Windows',
+                    'Device Compliance - Mac',
+                    'Mobile Phones',
+                    'Windows Devices'
+                ],
+                'Internet Firewall Policy': [
+                    'Block any P2P',
+                    'Default Block Tor, SMB, SMTP',
+                    'Default block for Categories',
+                    'Default prompt for Categories'
+                ],
+                'WAN Firewall Policy': [
+                    'Block IOT Wan Traffic',
+                    'Allow Automation access',
+                    'Access to TLV',
+                    'Rdp For Supervisors'
+                ],
+                'Private Access Policy': [
+                    'Sales Group',
+                    'R&D access',
+                    'Jane Doe',
+                    'All users'
+                ]
+            };
+            
+            if (policyTypeSelect && viewPolicyLink) {
+                policyTypeSelect.addEventListener('change', function() {
+                    const selectedPolicy = this.value;
+                    
+                    // Update the view link
+                    viewPolicyLink.textContent = 'View ' + selectedPolicy;
+                    
+                    // Update bar labels
+                    const labels = policyLabels[selectedPolicy];
+                    if (labels && barLabels.length === labels.length) {
+                        barLabels.forEach((label, index) => {
+                            label.textContent = labels[index];
+                        });
+                    }
                 });
             }
         })();
